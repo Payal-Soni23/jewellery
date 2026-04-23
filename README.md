@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# Jewellery MERN Stack Upgrade
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository now contains a production-ready MERN structure:
 
-## Available Scripts
+## Folder structure
 
-In the project directory, you can run:
+```text
+jewellery/
+  client/
+    src/
+      api/
+      components/
+      context/
+      hooks/
+      pages/
+      routes/
+    .env.example
+  server/
+    src/
+      config/
+      controllers/
+      middleware/
+      models/
+      routes/
+    .env.example
+```
 
-### `npm start`
+## Features included
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- JWT authentication with bcrypt password hashing
+- MongoDB models for `User`, `Product`, `Cart`, and `Order`
+- MVC Express APIs for auth, products, cart, and orders
+- React auth/cart state with Context API
+- Protected checkout and orders pages
+- Product search/filter/sort
+- Admin-only product creation page
+- Deployment-ready environment variable setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Backend API
 
-### `npm test`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/products`
+- `GET /api/products/:slug`
+- `POST /api/products` (admin only)
+- `POST /api/cart`
+- `GET /api/cart/:userId`
+- `POST /api/orders`
+- `GET /api/orders/:userId`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Local setup
 
-### `npm run build`
+1. Copy `server/.env.example` to `server/.env`
+2. Copy `client/.env.example` to `client/.env`
+3. Run `cd server && npm install`
+4. Run `cd client && npm install`
+5. Start backend with `cd server && npm run dev`
+6. Start frontend with `cd client && npm start`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Sample environment files
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Server:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```env
+PORT=5000
+NODE_ENV=development
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/jewellery
+JWT_SECRET=replace_with_a_long_random_secret
+CLIENT_URL=http://localhost:3000,https://your-vercel-app.vercel.app
+```
 
-### `npm run eject`
+Client:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Deployment guide
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Backend on Render/Railway
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Deploy the `server` folder as a Node service
+2. Build command: `npm install`
+3. Start command: `npm start`
+4. Add environment variables from `server/.env.example`
+5. Set `CLIENT_URL` to your Vercel frontend URL
 
-## Learn More
+### Frontend on Vercel
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Import the `client` folder as the frontend project
+2. Build command: `npm run build`
+3. Output directory: `build`
+4. Add `REACT_APP_API_URL=https://your-backend-domain/api`
+5. Redeploy after the backend URL is live
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Notes
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- The server seeds default products into MongoDB on first run so the storefront works immediately.
+- To use the admin panel, change a user document's `role` to `admin` in MongoDB.
