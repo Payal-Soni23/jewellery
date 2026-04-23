@@ -28,7 +28,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
-
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Jewellery API is running"
+  });
+});
 app.use(notFound);
 app.use(errorHandler);
 
