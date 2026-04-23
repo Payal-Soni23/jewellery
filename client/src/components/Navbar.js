@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
+import { FaInfoCircle, FaPhoneAlt } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import { useWishlist } from "../context/WishlistContext";
 
 const collections = [
   { label: "New Arrivals", path: "/Collection" },
@@ -12,11 +14,17 @@ const collections = [
   { label: "Daily Wear", path: "/daily-wear" },
 ];
 
+const quickLinks = [
+  { label: "About", path: "/about", Icon: FaInfoCircle },
+  { label: "Contact", path: "/contact", Icon: FaPhoneAlt },
+];
+
 export default function Navbar() {
   const [search, setSearch] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cart } = useCart();
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const { wishlistItems } = useWishlist();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -24,6 +32,7 @@ export default function Navbar() {
     () => cart.reduce((sum, item) => sum + item.quantity, 0),
     [cart]
   );
+  const wishlistCount = wishlistItems.length;
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
@@ -32,9 +41,9 @@ export default function Navbar() {
     setMobileOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
+  const handleUserNavigation = () => {
+    navigate(isAuthenticated ? "/dashboard" : "/login");
+    setMobileOpen(false);
   };
 
   return (
@@ -85,48 +94,53 @@ export default function Navbar() {
         </form>
 
         <div className="flex items-center justify-end gap-2 lg:flex-1">
-          <button
-            type="button"
-            className="hidden h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white transition hover:border-luxury-gold hover:text-luxury-gold sm:inline-flex"
+          {quickLinks.map(({ label, path, Icon }) => (
+            <Link
+              key={path}
+              to={path}
+              aria-label={label}
+              title={label}
+              className={`inline-flex h-11 w-11 items-center justify-center rounded-full border text-sm transition ${
+                location.pathname.toLowerCase() === path
+                  ? "border-luxury-gold bg-luxury-gold/10 text-luxury-gold"
+                  : "border-white/10 text-white hover:border-luxury-gold hover:bg-white/5 hover:text-luxury-gold"
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+            </Link>
+          ))}
+
+          <Link
+            to="/favourites"
+            aria-label="Favourites"
+            title="Favourites"
+            className={`relative hidden h-11 w-11 items-center justify-center rounded-full border transition sm:inline-flex ${
+              location.pathname.toLowerCase() === "/favourites"
+                ? "border-luxury-gold bg-luxury-gold/10 text-luxury-gold"
+                : "border-white/10 text-white hover:border-luxury-gold hover:text-luxury-gold"
+            }`}
           >
             <Heart className="h-4 w-4" />
-          </button>
+            {wishlistCount > 0 ? (
+              <span className="absolute -right-1 -top-1 inline-flex min-h-[1.4rem] min-w-[1.4rem] items-center justify-center rounded-full bg-luxury-gold px-1 text-[10px] font-bold text-luxury-black">
+                {wishlistCount}
+              </span>
+            ) : null}
+          </Link>
 
-          {user ? (
-            <div className="group relative">
-              <button
-                type="button"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white transition hover:border-luxury-gold hover:text-luxury-gold"
-              >
-                <User className="h-4 w-4" />
-              </button>
-              <div className="invisible absolute right-0 top-14 w-52 rounded-3xl border border-luxury-line bg-white p-3 opacity-0 shadow-luxury transition duration-200 group-hover:visible group-hover:opacity-100">
-                <p className="px-3 py-2 text-sm font-semibold text-luxury-black">{user.name}</p>
-                <Link to="/orders" className="block rounded-2xl px-3 py-2 text-sm text-luxury-black/70 transition hover:bg-luxury-pearl hover:text-luxury-black">
-                  My Orders
-                </Link>
-                {user.role === "admin" ? (
-                  <Link to="/admin/products" className="block rounded-2xl px-3 py-2 text-sm text-luxury-black/70 transition hover:bg-luxury-pearl hover:text-luxury-black">
-                    Admin Panel
-                  </Link>
-                ) : null}
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="mt-1 block w-full rounded-2xl px-3 py-2 text-left text-sm text-luxury-black/70 transition hover:bg-luxury-pearl hover:text-luxury-black"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          ) : (
-            <Link
-              to="/login"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white transition hover:border-luxury-gold hover:text-luxury-gold"
-            >
-              <User className="h-4 w-4" />
-            </Link>
-          )}
+          <button
+            type="button"
+            onClick={handleUserNavigation}
+            aria-label={isAuthenticated ? "Dashboard" : "Login"}
+            title={isAuthenticated ? `Dashboard${user?.name ? ` - ${user.name}` : ""}` : "Login"}
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-full border transition ${
+              location.pathname.toLowerCase() === "/dashboard"
+                ? "border-luxury-gold bg-luxury-gold/10 text-luxury-gold"
+                : "border-white/10 text-white hover:border-luxury-gold hover:text-luxury-gold"
+            }`}
+          >
+            <User className="h-4 w-4" />
+          </button>
 
           <Link
             to="/Basket"
@@ -165,13 +179,30 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+            {quickLinks.map(({ label, path }) => (
+              <Link
+                key={path}
+                to={path}
+                onClick={() => setMobileOpen(false)}
+                className="rounded-2xl px-4 py-3 text-sm uppercase tracking-[0.24em] text-white/80 transition hover:bg-white/5 hover:text-white"
+              >
+                {label}
+              </Link>
+            ))}
             <Link
-              to="/contact"
+              to="/favourites"
               onClick={() => setMobileOpen(false)}
               className="rounded-2xl px-4 py-3 text-sm uppercase tracking-[0.24em] text-white/80 transition hover:bg-white/5 hover:text-white"
             >
-              Contact
+              Favourites
             </Link>
+            <button
+              type="button"
+              onClick={handleUserNavigation}
+              className="rounded-2xl px-4 py-3 text-left text-sm uppercase tracking-[0.24em] text-white/80 transition hover:bg-white/5 hover:text-white"
+            >
+              {isAuthenticated ? "Dashboard" : "Login"}
+            </button>
           </div>
         </div>
       </div>

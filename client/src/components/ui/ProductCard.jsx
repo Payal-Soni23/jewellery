@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import Button from "./Button";
 import LazyImage from "./LazyImage";
 import RatingStars from "./RatingStars";
+import { PLACEHOLDER_PRODUCT_IMAGE } from "../../utils/product";
+import { useWishlist } from "../../context/WishlistContext";
 
 const getDerivedRating = (product) => {
   if (product.rating) {
@@ -23,16 +25,24 @@ const getReviewCount = (product) => {
 };
 
 export default function ProductCard({ product, onAddToCart, onQuickView }) {
-  const [wishlisted, setWishlisted] = useState(false);
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const rating = useMemo(() => getDerivedRating(product), [product]);
   const reviews = useMemo(() => getReviewCount(product), [product]);
+  const [isHeartAnimating, setIsHeartAnimating] = useState(false);
+  const wishlisted = isInWishlist(product._id || product.id || product.slug);
+
+  const handleWishlistToggle = () => {
+    toggleWishlist(product);
+    setIsHeartAnimating(true);
+    window.setTimeout(() => setIsHeartAnimating(false), 180);
+  };
 
   return (
     <article className="group overflow-hidden rounded-[28px] border border-luxury-line bg-white shadow-[0_10px_30px_rgba(17,17,17,0.05)] transition duration-500 hover:-translate-y-2 hover:shadow-luxury">
       <div className="relative overflow-hidden bg-luxury-pearl">
         <Link to={`/Collection/${product.slug}`}>
           <LazyImage
-            src={product.images?.[0] || product.image}
+            src={product.images?.[0] || product.image || PLACEHOLDER_PRODUCT_IMAGE}
             alt={product.name}
             className="aspect-[4/5] transition duration-700 group-hover:scale-110"
           />
@@ -44,10 +54,11 @@ export default function ProductCard({ product, onAddToCart, onQuickView }) {
           </span>
           <button
             type="button"
-            onClick={() => setWishlisted((current) => !current)}
-            className="rounded-full bg-white/90 p-2 text-luxury-black backdrop-blur transition hover:text-luxury-gold"
+            onClick={handleWishlistToggle}
+            aria-label={wishlisted ? "Remove from favourites" : "Add to favourites"}
+            className="rounded-full bg-white/90 p-2 text-luxury-black backdrop-blur transition hover:scale-105 hover:text-luxury-gold"
           >
-            <Heart className={`h-4 w-4 ${wishlisted ? "fill-luxury-gold text-luxury-gold" : ""}`} />
+            <Heart className={`h-4 w-4 transition ${wishlisted ? "fill-luxury-gold text-luxury-gold" : ""} ${isHeartAnimating ? "scale-125" : ""}`} />
           </button>
         </div>
 

@@ -12,6 +12,7 @@ import RatingStars from "../components/ui/RatingStars";
 import SectionHeading from "../components/ui/SectionHeading";
 import ProductCard from "../components/ui/ProductCard";
 import { ProductCardSkeleton, Skeleton } from "../components/ui/Skeleton";
+import { PLACEHOLDER_PRODUCT_IMAGE } from "../utils/product";
 
 const RECENTLY_VIEWED_KEY = "recentlyViewedProducts";
 
@@ -54,7 +55,7 @@ export default function ProductDetail() {
         setLoading(true);
         const data = await fetchProductBySlug(name);
         setProduct(data);
-        setSelectedImage(data.images?.[0] || "");
+        setSelectedImage(data.images?.[0] || PLACEHOLDER_PRODUCT_IMAGE);
         setError("");
         storeRecentlyViewed(data);
         setRecentlyViewed(getRecentlyViewed().filter((item) => item._id !== data._id));
@@ -120,7 +121,7 @@ export default function ProductDetail() {
             <div className="overflow-hidden rounded-[32px] bg-white shadow-luxury">
               <div className="group relative">
                 <LazyImage
-                  src={selectedImage || product.images?.[0]}
+                  src={selectedImage || product.images?.[0] || PLACEHOLDER_PRODUCT_IMAGE}
                   alt={product.name}
                   className="aspect-square transition duration-700 group-hover:scale-110"
                 />

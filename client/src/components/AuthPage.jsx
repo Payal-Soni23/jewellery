@@ -30,7 +30,7 @@ export function Login() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const redirectPath = location.state?.from || "/";
+  const redirectPath = location.state?.from || "/dashboard";
 
   const handleChange = (event) => {
     setFormData((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -77,9 +77,12 @@ export function Login() {
 export function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const redirectPath = location.state?.from || "/dashboard";
 
   const handleChange = (event) => {
     setFormData((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -92,7 +95,7 @@ export function Register() {
       setSubmitting(true);
       setError("");
       await register(formData.name, formData.email, formData.password);
-      navigate("/", { replace: true });
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Unable to register");
     } finally {

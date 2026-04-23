@@ -1,11 +1,13 @@
-export const allProducts = [
+import { normalizeProducts } from "../utils/product";
+
+const productData = [
   {
     _id: 1,
     type:"gold",
     name: 'Gold Ring',
     price: 12000,
     category: 'Ring',
-    images: [ '/images/rings/1.png', '/images/rings/1-2.png', '/images/rings/1-3.png' ],
+    images: [ '/images/rings/1.png' ],
   },
   {
     _id: 2,
@@ -13,7 +15,7 @@ export const allProducts = [
     name: 'rose Gold Ring',
     price: 18000,
     category: 'Ring',
-    images: [ '/images/rings/2.png', '/images/rings/2-2.png', '/images/rings/2-3.png' ],
+    images: [ '/images/rings/2.png' ],
   },
   {
     _id: 3,
@@ -21,7 +23,7 @@ export const allProducts = [
     name: 'Gold Pendant',
     price: 14000,
     category: 'Pendant',
-    images: [ '/images/pendents/1.png' ],
+    images: [ '/images/pendants/1.png' ],
   },
   {
     _id: 4,
@@ -29,7 +31,7 @@ export const allProducts = [
     name: 'butterfly Gold Ring',
     price: 12000,
     category: 'Ring',
-    images: [ '/images/rings/3.png', '/images/rings/3-2.png', '/images/rings/3-3.png' ],
+    images: [ '/images/rings/3.png' ],
   },
   {
     _id: 5,
@@ -160,3 +162,5 @@ export const allProducts = [
   images: ["/images/rings/7.png"],
 }
 ];
+
+export const allProducts = normalizeProducts(productData);

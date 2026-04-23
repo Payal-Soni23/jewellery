@@ -7,6 +7,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => getStoredUser());
   const [loading, setLoading] = useState(true);
+  const token = getStoredToken();
 
   useEffect(() => {
     setUser(getStoredUser());
@@ -51,13 +52,15 @@ export const AuthProvider = ({ children }) => {
   const value = useMemo(
     () => ({
       user,
+      token,
+      userId: user?.id || user?._id || "",
       loading,
-      isAuthenticated: Boolean(user && getStoredToken()),
+      isAuthenticated: Boolean(user && token),
       login,
       register,
       logout,
     }),
-    [user, loading]
+    [user, token, loading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

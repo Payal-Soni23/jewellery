@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import ProductCard from "./ui/ProductCard";
@@ -42,6 +42,12 @@ export default function ProductListing({
   const [sortBy, setSortBy] = useState("featured");
   const [showFilters, setShowFilters] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      console.debug("[ProductListing] product data", products);
+    }
+  }, [products]);
 
   const categories = useMemo(
     () => ["All", ...new Set(products.map((product) => product.category).filter(Boolean))],
