@@ -1,3 +1,70 @@
+# 💎 Jewellery E-Commerce Full Stack Project
+
+## 🚀 Live Demo
+
+Frontend: [https://your-vercel-link](https://krishnajewellery.vercel.app)
+Backend: [https://your-render-link](https://e-commerce-jewellery-er52.onrender.com)
+
+---
+
+## 📌 Features
+
+* User Authentication (JWT-based login/signup)
+* Product Listing
+* Add to Cart (persistent)
+* Order Management
+* Admin Product Management
+
+---
+
+## 🛠️ Tech Stack
+
+* Frontend: React.js
+* Backend: Node.js, Express.js
+* Database: MongoDB
+* Authentication: JWT, bcrypt
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the repo
+
+git clone https://github.com/your-username/repo-name
+
+### 2. Setup Backend
+
+cd server
+cp .env.example .env
+npm install
+npm run dev
+
+### 3. Setup Frontend
+
+cd client
+cp .env.example .env
+npm install
+npm start
+
+---
+
+## 🔑 Environment Variables
+
+### Server (.env)
+
+MONGO_URI=
+JWT_SECRET=
+CLIENT_URL=
+
+### Client (.env)
+
+REACT_APP_API_URL=
+
+---
+
+## 📌 Notes
+
+* Admin access can be enabled by setting isAdmin=true in MongoDB
 # Jewellery MERN Stack Upgrade
 
 This repository now contains a production-ready MERN structure:
@@ -35,63 +102,6 @@ jewellery/
 - Product search/filter/sort
 - Admin-only product creation page
 - Deployment-ready environment variable setup
-
-## Backend API
-
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/products`
-- `GET /api/products/:slug`
-- `POST /api/products` (admin only)
-- `POST /api/cart`
-- `GET /api/cart/:userId`
-- `POST /api/orders`
-- `GET /api/orders/:userId`
-
-## Local setup
-
-1. Copy `server/.env.example` to `server/.env`
-2. Copy `client/.env.example` to `client/.env`
-3. Run `cd server && npm install`
-4. Run `cd client && npm install`
-5. Start backend with `cd server && npm run dev`
-6. Start frontend with `cd client && npm start`
-
-## Sample environment files
-
-Server:
-
-```env
-PORT=5000
-NODE_ENV=development
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/jewellery
-JWT_SECRET=replace_with_a_long_random_secret
-CLIENT_URL=http://localhost:3000,https://your-vercel-app.vercel.app
-```
-
-Client:
-
-```env
-REACT_APP_API_URL=http://localhost:5000/api
-```
-
-## Deployment guide
-
-### Backend on Render/Railway
-
-1. Deploy the `server` folder as a Node service
-2. Build command: `npm install`
-3. Start command: `npm start`
-4. Add environment variables from `server/.env.example`
-5. Set `CLIENT_URL` to your Vercel frontend URL
-
-### Frontend on Vercel
-
-1. Import the `client` folder as the frontend project
-2. Build command: `npm run build`
-3. Output directory: `build`
-4. Add `REACT_APP_API_URL=https://your-backend-domain/api`
-5. Redeploy after the backend URL is live
 
 ## Notes
 
