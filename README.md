@@ -30,7 +30,7 @@ Backend: [https://your-render-link](https://e-commerce-jewellery-er52.onrender.c
 
 ### 1. Clone the repo
 
-git clone https://github.com/your-username/repo-name
+git clone [https://github.com/your-username/repo-name](https://github.com/Payal-Soni23/jewellery.git)
 
 ### 2. Setup Backend
 
